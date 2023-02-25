@@ -24,9 +24,6 @@ jobs:
           target: public/
           auto-match: true
         
-     - name: Change dir
-        run: cd public/
-        
       - name: Display the files
         run: ls -a
 
