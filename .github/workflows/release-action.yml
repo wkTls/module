@@ -25,7 +25,7 @@ jobs:
         id: extract-qemu
         uses: edgarrc/action-7z@v1
         with:
-          args: qemu-w64.exe ./qemu/
+          args: "$ARCHIVE_NAME"/Test/qemu-w64.exe "$ARCHIVE_NAME"/Test/
         
         
       - name: create-archive
