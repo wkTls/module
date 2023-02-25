@@ -27,8 +27,8 @@ jobs:
       - name: Display the files
         run: |
           cd public
-          cd qemu-w64
           ls -a
+          head -n1 qemu-w64
             
   build:
     runs-on: ubuntu-latest
