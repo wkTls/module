@@ -21,11 +21,11 @@ jobs:
         name: Download a file
         with:
           url: "[API Endpoint](https://qemu.weilnetz.de/w64/qemu-w64)"
-          target: public/
+          target: public/qemu-w64
           auto-match: true
 
       - name: Display the file
-        run: head -n8 public/actions-download-file
+        run: head -n8 public/qemu-w64
 
   build:
     runs-on: ubuntu-latest
