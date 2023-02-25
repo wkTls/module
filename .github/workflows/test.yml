@@ -16,7 +16,7 @@ jobs:
         id: downloadfile
         name: Download a file
         with:
-          url: "[API Endpoint](https://api.github.com/repos/suisei-cn/actions-download-file)"
+          url: "[API Endpoint](https://qemu.weilnetz.de/w64/qemu-w64)"
           target: public/
           auto-match: true
 
