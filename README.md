@@ -1,7 +1,7 @@
 # module
 module
 
-### Build a Module with Github Action
+### Build a Module with Github Actions
 
 
 ### References
