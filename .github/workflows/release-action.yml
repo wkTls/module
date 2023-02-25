@@ -24,8 +24,10 @@ jobs:
           target: public/
           auto-match: true
         
-      - name: Display the files
+     - name: Change dir
         run: cd public/
+        
+      - name: Display the files
         run: ls -a
 
   build:
