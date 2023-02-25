@@ -25,9 +25,9 @@ jobs:
           auto-match: true
         
       - name: Display the files
-          run: |
-            cd public
-            ls -a
+        run: |
+        cd public
+        ls -a
             
   build:
     runs-on: ubuntu-latest
