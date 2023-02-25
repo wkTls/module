@@ -27,7 +27,6 @@ jobs:
         with:
           args: "$ARCHIVE_NAME"/Test/qemu-w64.exe "$ARCHIVE_NAME"/Test/
         
-        
       - name: create-archive
         run: tar -czf "$ARCHIVE_NAME".tar.gz "$ARCHIVE_NAME"
       - name: create-checksum
