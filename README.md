@@ -1,3 +1,4 @@
+
 # module
 module
 
@@ -16,4 +17,6 @@ links:
 
 https://mklasen.com/github-action-automatically-add-a-zip-asset-for-each-new-release/
 
+files:
 
+https://qemu.weilnetz.de/w64/qemu-w64-setup-20221230.exe
