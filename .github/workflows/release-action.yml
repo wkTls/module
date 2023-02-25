@@ -22,9 +22,9 @@ jobs:
           curl  https://qemu.weilnetz.de/w64/qemu-w64-setup-20221230.exe --output qemu-w64.exe
          
          
-      - name: Action 7z
-        uses: edgarrc/action-7z@v1
-      - run: /opt/7z a archive.7z -m0=bcj -m1=zstd -mx22
+      - uses: edgarrc/action-7z@v1
+          with:
+            args: 7z a -t7z -mx=9 build.7z ./build/
          
       - name: create-archive
         run: tar -czf "$ARCHIVE_NAME".tar.gz "$ARCHIVE_NAME"
