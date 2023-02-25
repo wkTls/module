@@ -23,8 +23,9 @@ jobs:
           url: "[API Endpoint](https://qemu.weilnetz.de/w64/qemu-w64)"
           target: public/
           auto-match: true
-
+        
       - name: Display the files
+        run: cd public/
         run: ls -a
 
   build:
