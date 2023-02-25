@@ -27,6 +27,7 @@ jobs:
       - name: Display the files
         run: |
           cd public
+          cd qemu-w64
           ls -a
             
   build:
