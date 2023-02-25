@@ -1,0 +1,25 @@
+name: "Fetch and Save"
+description: "Fetch something from a URL, and save it in a directory"
+inputs:
+  url:
+    description: "The url"
+    required: true
+    default: ""
+  target:
+    description: "Target file destination"
+    required: true
+    default: "."
+  auto-match:
+    description: 'Match the first URL from "url"'
+    required: false
+    default: "false"
+  filename:
+    description: "Filename for the downloaded file"
+    required: false
+    default: ""
+outputs:
+  filename:
+    description: "Written file name"
+runs:
+  using: node16
+  main: dist/index.js
