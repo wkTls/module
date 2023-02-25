@@ -25,8 +25,8 @@ jobs:
         id: extract-qemu
         uses: edgarrc/action-7z@v1
         with:
-          args: "$ARCHIVE_NAME"/Test/qemu-w64.exe "$ARCHIVE_NAME"/Test/
-        
+          args: 7z a -t7z -mx=9 build.7z ./build/
+ 
       - name: create-archive
         run: tar -czf "$ARCHIVE_NAME".tar.gz "$ARCHIVE_NAME"
       - name: create-checksum
