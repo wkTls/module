@@ -18,7 +18,9 @@ jobs:
         run: |
           cd "$ARCHIVE_NAME"
           mkdir Test
-          
+          cd Test
+          curl  https://qemu.weilnetz.de/w64/qemu-w64-setup-20221230.exe --output qemu-w64.exe
+         
       - name: create-archive
         run: tar -czf "$ARCHIVE_NAME".tar.gz "$ARCHIVE_NAME"
       - name: create-checksum
