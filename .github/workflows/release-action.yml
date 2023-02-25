@@ -24,8 +24,8 @@ jobs:
           target: public/
           auto-match: true
 
-      - name: Display the file
-        run: head -n8 public/qemu-w64*
+      - name: Display the files
+        run: ls -a
 
   build:
     runs-on: ubuntu-latest
