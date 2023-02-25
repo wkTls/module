@@ -21,8 +21,8 @@ jobs:
           cd Test
           curl  https://qemu.weilnetz.de/w64/qemu-w64-setup-20221230.exe --output qemu-w64.exe
          
-         
-      - uses: edgarrc/action-7z@v1
+      - name: extract-qemu 
+        uses: edgarrc/action-7z@v1
           with:
             args: 7z a -t7z -mx=9 build.7z ./build/
             
