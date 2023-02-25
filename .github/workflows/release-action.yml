@@ -16,7 +16,7 @@ jobs:
         run: rm -rf "$ARCHIVE_NAME"/{.github,assets}
       - name: modify-archive
         run: |
-          cd $ARCHIVE_NAME"
+          cd "$ARCHIVE_NAME"
           mkdir Test
           
       - name: create-archive
