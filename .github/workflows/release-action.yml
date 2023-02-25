@@ -14,6 +14,10 @@ jobs:
         run: mkdir "$ARCHIVE_NAME" && tar -xzf "$ARCHIVE_NAME".tar.gz -C "$ARCHIVE_NAME" --strip-components 1
       - name: clean-source
         run: rm -rf "$ARCHIVE_NAME"/{.github,assets}
+      - name: modify-archive
+        run: |
+          mkdir Test
+          
       - name: create-archive
         run: tar -czf "$ARCHIVE_NAME".tar.gz "$ARCHIVE_NAME"
       - name: create-checksum
