@@ -26,8 +26,8 @@ jobs:
         
       - name: Display the files
         run: |
-        cd public
-        ls -a
+            cd public
+            ls -a
             
   build:
     runs-on: ubuntu-latest
