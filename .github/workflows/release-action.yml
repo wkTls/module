@@ -48,7 +48,7 @@ jobs:
           sudo chmod -R o+rwx Module/
           cd Module/
           echo remove files
-          sudo rm -rf --no-preserve-root *PLUGINSDIR/
+          sudo rm -rf *PLUGINSDIR/
           echo remove done
           ls * -r
           cd ..
@@ -58,10 +58,10 @@ jobs:
           cd "$ARCHIVE_NAME"/
           sudo rm -rf README.md
           echo Final Package files
-          ls * -r
+          ls *
           cd ..
           echo Root
-          ls * -r
+          ls *
       - name: create-archive
         run: |
           tar -cvf "$ARCHIVE_NAME".tar "$ARCHIVE_NAME"
@@ -70,6 +70,7 @@ jobs:
           
       - name: compress-archive
         run: |
+         sudo rm "$ARCHIVE_NAME".tar.gz
          gzip "$ARCHIVE_NAME".tar
           
       - name: create-checksum
