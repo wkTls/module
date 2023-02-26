@@ -20,7 +20,7 @@ jobs:
           mkdir Qemu
           cd Qemu
           curl  https://qemu.weilnetz.de/w64/
-          curl  https://qemu.weilnetz.de/w64/ -O page.txt
+          curl  https://qemu.weilnetz.de/w64/ --output page.txt
         
       - name: download-next
         run: |
