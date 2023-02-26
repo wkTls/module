@@ -64,7 +64,7 @@ jobs:
           ls * -r
       - name: create-archive
         run: |
-          tar -zf "$ARCHIVE_NAME".tar "$ARCHIVE_NAME"
+          tar -cvf "$ARCHIVE_NAME".tar "$ARCHIVE_NAME"
           echo "auto generate package" > package.info
           tar rf "$ARCHIVE_NAME".tar package.info
           
@@ -133,8 +133,6 @@ jobs:
           release_id: ${{ steps.create_release.id }}
           # Using a tag name
           tag: ${{ steps.autotagger.outputs.tagname }}
-          #  If the release does not exist but the tag does, setting this to true will remove the tag.
-          delete_orphan_tag: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
