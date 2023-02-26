@@ -161,7 +161,7 @@ jobs:
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: pkg64/${{ env.ARCHIVE_NAME }}.tar.gz
-          asset_name: ${{ env.ARCHIVE_NAME }}-64.tar.gz
+          asset_name: ${{ env.ARCHIVE_NAME }}[64].tar.gz
           asset_content_type: application/gzip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -171,7 +171,7 @@ jobs:
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: pkg32/${{ env.ARCHIVE_NAME }}.tar.gz
-          asset_name: ${{ env.ARCHIVE_NAME }}-32.tar.gz
+          asset_name: ${{ env.ARCHIVE_NAME }}[32].tar.gz
           asset_content_type: application/gzip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -182,7 +182,7 @@ jobs:
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: pkg64/${{ env.ARCHIVE_NAME }}.sha256
-          asset_name: ${{ env.ARCHIVE_NAME }}-64.sha256
+          asset_name: ${{ env.ARCHIVE_NAME }}[64].sha256
           asset_content_type: text/plain
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -192,7 +192,7 @@ jobs:
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: pkg32/${{ env.ARCHIVE_NAME }}.sha256
-          asset_name: ${{ env.ARCHIVE_NAME }}-32.sha256
+          asset_name: ${{ env.ARCHIVE_NAME }}[32].sha256
           asset_content_type: text/plain
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
