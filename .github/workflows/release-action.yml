@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ARCHIVE_NAME: ${{ github.event.repository.name }}-${{ github.event.release.tag_name }}
-      PKG_FOLDER: .${{ ARCHIVE_NAME }}
+      PKG_FOLDER: .${{ env.ARCHIVE_NAME }}
     steps:
       - name: download-source
         run: curl -sL "${{ github.event.release.tarball_url }}" >"$ARCHIVE_NAME".tar.gz
