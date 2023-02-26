@@ -33,13 +33,12 @@ jobs:
           sudo rm -rf  \$PLUGINSDIR/
           cd Test/
           ls * -r
- 
       - name: copy-module-next
         run: |
           cp -r Test/. "$ARCHIVE_NAME"/
-
       - name: create-archive
-        run: tar -czf "$ARCHIVE_NAME".tar.gz "$ARCHIVE_NAME"
+        run: |
+          tar c "$ARCHIVE_NAME".tar.gz | gzip --best > "$ARCHIVE_NAME"
       - name: create-checksum
         id: create-checksum
         run: |
