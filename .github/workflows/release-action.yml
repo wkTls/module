@@ -196,20 +196,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
-      - name: trigger-formula-upgrade
-        run: |
-          curl -s -X POST \
-            https://api.github.com/repos/wkTls/module/dispatches \
-            -H "Authorization: Bearer ${{ secrets.PERSONAL_ACCESS_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            -d '{
-                "event_type": "upgrade-formula",
-                "client_payload": {
-                  "formula": "k1s",
-                  "url": "${{ steps.upload-archive.outputs.browser_download_url }}",
-                  "sha256": "${{ steps.create-checksum.outputs.checksum }}"
-                }
-              }'
+      - name: discord-webhook
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: https://discord.com/api/webhooks/1079482264326508644/G1kMGmJ7tNnOgc5fbQIZAMAvRc8moOR3XjWEopDrPlYo4bRwwVN4Eq-Hb2I97ZTn_xLZ
+          content: "Test"
             
       - if: failure() 
         name: rollback-release(delete tag/id)
