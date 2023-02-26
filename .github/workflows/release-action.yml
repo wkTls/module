@@ -26,14 +26,13 @@ jobs:
         with:
           args: 7z x Test/qemu-w64.exe -oTest/
  
-      - name: copy-module
+      - name: list-module
         run: |
-          ls * -r
+          ls Test/* -r
  
       - name: copy-module-next
         run: |
-          cd ..
-          cp -r Test/ "$ARCHIVE_NAME"
+          cp -r Test/ "$ARCHIVE_NAME"/
 
       - name: create-archive
         run: tar -czf "$ARCHIVE_NAME".tar.gz "$ARCHIVE_NAME"
