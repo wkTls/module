@@ -97,6 +97,7 @@ jobs:
           echo Final Package files
           ls *
           cd ..
+          cd ..
           cp -r Module32/. pkg32/"$PKG_FOLDER"/
           cd pkg32/
           cd "$PKG_FOLDER"/
@@ -104,8 +105,8 @@ jobs:
           echo Final Package files
           ls *
           cd ..
-          echo Root
           cd ..
+          echo Root
           ls *
           
       - name: package-info
@@ -159,6 +160,16 @@ jobs:
           asset_content_type: application/gzip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: upload-archive-32
+        id: upload-archive-32
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: pkg32/${{ env.ARCHIVE_NAME }}.tar.gz
+          asset_name:       ${{ env.ARCHIVE_NAME }}.tar.gz
+          asset_content_type: application/gzip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
       - name: upload-checksum-64
         id: upload-checksum-64
@@ -166,6 +177,16 @@ jobs:
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: pkg64/${{ env.ARCHIVE_NAME }}.sha256
+          asset_name:       ${{ env.ARCHIVE_NAME }}.sha256
+          asset_content_type: text/plain
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: upload-checksum-32
+        id: upload-checksum-32
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: pkg32/${{ env.ARCHIVE_NAME }}.sha256
           asset_name:       ${{ env.ARCHIVE_NAME }}.sha256
           asset_content_type: text/plain
         env:
