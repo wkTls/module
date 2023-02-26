@@ -60,13 +60,12 @@ jobs:
           curl https://qemu.weilnetz.de/w64/"$(cat grep.txt)" --output qemu-w32.exe
           cd ..   
         
-      - name: extract-qemu
-        id: extract-qemu
+      - name: extract-data
+        id: extract-data
         uses: edgarrc/action-7z@v1
-        with:
-          args: |
-            7z x Work64/qemu-w64.exe -oModule64/
-            7z x Work32/qemu-w32.exe -oModule32/
+        run: |
+          7z x Work64/qemu-w64.exe -oModule64/
+          7z x Work32/qemu-w32.exe -oModule32/
  
       - name: clean-module
         run: |
@@ -148,7 +147,7 @@ jobs:
               }'
             
       - if: failure() 
-        name: Rollback Release (Delete tag/id)
+        name: rollback-release(delete tag/id)
         run: |
           curl -s -X DELETE \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
