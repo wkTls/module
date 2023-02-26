@@ -32,7 +32,10 @@ jobs:
         run: |
           ls * -r
           cd Qemu
+          ls * -r
+          echo greptest
           grep qemu-w64-setup-*.exe  page.txt > grep.txt
+          echo grepfinish
           cat grep.txt
           curl  https://qemu.weilnetz.de/w64/qemu-w64-setup-20221230.exe -O qemu-w64.exe
         
