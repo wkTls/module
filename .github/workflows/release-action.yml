@@ -57,6 +57,8 @@ jobs:
           cp -r Module/. "$ARCHIVE_NAME"/
           cd Module/
           sudo rm -rf README.md
+          echo Final Package files
+          ls * -r
           cd ..
       - name: create-archive
         run: |
