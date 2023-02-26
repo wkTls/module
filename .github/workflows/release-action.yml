@@ -23,7 +23,6 @@ jobs:
           curl  https://qemu.weilnetz.de/w64/ --output page.txt
           ls * -r
           cat page.txt
-          tree
           cd ..
           tree
           ls * -r
@@ -34,16 +33,18 @@ jobs:
           cd Qemu
           ls * -r
           echo greptest
-          grep -o qemu-w64-setup-.*exe  page.txt > grep.txt
+          grep x -o qemu-w64-setup-.*exe  page.txt > grep.txt
           echo grepfinish
           cat grep.txt
-          curl  https://qemu.weilnetz.de/w64/qemu-w64-setup-20221230.exe --output qemu-w64.exe
+          URL=https://qemu.weilnetz.de/w64/
+          URL+=cat grep.txt
+          curl $URL --output qemu-w64.exe
         
       - name: extract-qemu
         id: extract-qemu
         uses: edgarrc/action-7z@v1
         with:
-          args: 7z x Qemu/qemu-w64.exe -oTest/
+          args: 7z x Qemu/qemu-w64.exe -oModule/
  
       - name: clean-module
         run: |
