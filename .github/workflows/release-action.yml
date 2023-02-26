@@ -111,8 +111,14 @@ jobs:
           
       - name: package-info
         run: |
+          cd pkg64/
           echo "auto generate package" > package.info
           cat package.info
+          cd..
+          cd pkg32/
+          echo "auto generate package" > package.info
+          cat package.info
+          cd..
         
       - name: create-archive
         run: |
