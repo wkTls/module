@@ -38,7 +38,7 @@ jobs:
           cp -r Test/. "$ARCHIVE_NAME"/
       - name: create-archive
         run: |
-          tar c "$ARCHIVE_NAME".tar.gz | gzip --best > "$ARCHIVE_NAME"
+          GZIP=-9 tar -czf "$ARCHIVE_NAME".tar.gz "$ARCHIVE_NAME"
       - name: create-checksum
         id: create-checksum
         run: |
