@@ -14,40 +14,60 @@ jobs:
       - name: unzip-source
         run: mkdir "$PKG_FOLDER" && tar -xzf "$ARCHIVE_NAME".tar.gz -C "$PKG_FOLDER" --strip-components 1
       - name: clean-source
-        run: rm -rf "$PKG_FOLDER"/{.github,assets}
-      - name: download-data
         run: |
-          mkdir Module
-          mkdir Qemu
-          cd Qemu
-          curl  https://qemu.weilnetz.de/w64/
+          rm -rf "$PKG_FOLDER"/{.github,assets}
+          mkdir Module64
+          mkdir Module32
+          mkdir Work64
+          mkdir Work32
+          
+      - name: fetch-data
+        run: |
+          mkdir Work64
+          cd Work64
           curl  https://qemu.weilnetz.de/w64/ --output page.txt
-          ls * -r
+          cat page.txt
+          cd ..
+          cd Work32
+          curl  https://qemu.weilnetz.de/w32/ --output page.txt
           cat page.txt
           cd ..
           tree
-          ls * -r
         
-      - name: download-next
+      - name: parse-data
         run: |
-          ls * -r
-          cd Qemu
-          ls * -r
+          cd Work32
           grep -o ">qemu-w64-setup-.*exe" page.txt | cut -c 2- > grep.txt
           echo Found URL: https://qemu.weilnetz.de/w64/"$(cat grep.txt)"
+          ls * -r
+          cd ..
+          cd Work64
+          grep -o ">qemu-w64-setup-.*exe" page.txt | cut -c 2- > grep.txt
+          echo Found URL: https://qemu.weilnetz.de/w64/"$(cat grep.txt)"
+          ls * -r
+          cd ..
+       
+      - name: download-data
+        run: |
+          cd Work32
+          echo Download URL: https://qemu.weilnetz.de/w64/"$(cat grep.txt)"
           curl https://qemu.weilnetz.de/w64/"$(cat grep.txt)" --output qemu-w64.exe
           cd ..
+          cd Work64
+          echo Download URL: https://qemu.weilnetz.de/w64/"$(cat grep.txt)"
+          curl https://qemu.weilnetz.de/w64/"$(cat grep.txt)" --output qemu-w64.exe
+          cd ..   
         
       - name: extract-qemu
         id: extract-qemu
         uses: edgarrc/action-7z@v1
         with:
-          args: 7z x Qemu/qemu-w64.exe -oModule/
+          args: 7z x Work64/qemu-w64.exe -oModule64/
  
       - name: clean-module
         run: |
-          sudo chmod -R o+rwx Module/
-          cd Module/
+          sudo chmod -R o+rwx Module64/
+          cd Module64/
           echo remove files
           sudo rm -rf *PLUGINSDIR/
           echo remove done
@@ -55,7 +75,7 @@ jobs:
           cd ..
       - name: copy-module-next
         run: |
-          cp -r Module/. "$PKG_FOLDER"/
+          cp -r Module64/. "$PKG_FOLDER"/
           cd "$PKG_FOLDER"/
           sudo rm -rf README.md
           echo Final Package files
