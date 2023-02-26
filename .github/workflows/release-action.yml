@@ -24,7 +24,7 @@ jobs:
         id: extract-qemu
         uses: edgarrc/action-7z@v1
         with:
-          args: 7z x Test/qemu-w64.exe -o$Test/
+          args: 7z x Test/qemu-w64.exe -oTest/
  
       - name: copy-module
         run: |
@@ -32,7 +32,6 @@ jobs:
  
       - name: copy-module-next
         run: |
-          cd ..
           cd ..
           cp -r Test/ "$ARCHIVE_NAME"
 
