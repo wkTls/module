@@ -201,7 +201,7 @@ jobs:
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.WEBHOOK_URL }}
-          content: "Test"
+          content: "Pkg_Release: https://github.com/wkTls/module/releases/tag/${{ github.event.release.tag_name }}"
             
       - if: failure() 
         name: rollback-release(delete tag/id)
