@@ -28,7 +28,7 @@ jobs:
  
       - name: copy-module
         run: |
-          cd..
+          cd ..
           ls
           cp -r Test/* "$ARCHIVE_NAME"
 
