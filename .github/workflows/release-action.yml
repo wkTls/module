@@ -28,6 +28,7 @@ jobs:
  
       - name: list-module
         run: |
+          su - root
           chmod -R o+rwx Test/
           ls * -r
  
