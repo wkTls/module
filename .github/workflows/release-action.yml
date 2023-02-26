@@ -16,9 +16,11 @@ jobs:
       - name: unzip-source
         run: mkdir "$PKG_FOLDER" && tar -xzf "$ARCHIVE_NAME".tar.gz -C "$PKG_FOLDER" --strip-components 1
         
-      - name: clean-source
+      - name: pre-source
         run: |
           rm -rf "$PKG_FOLDER"/{.github,assets}
+          cp -r "$PKG_FOLDER"/ pkg64/"$PKG_FOLDER"/
+          cp -r "$PKG_FOLDER"/ pkg32/"$PKG_FOLDER"/
           mkdir Module64
           mkdir Module32
           mkdir Work64
@@ -84,21 +86,24 @@ jobs:
           sudo rm -rf *PLUGINSDIR/
           cd ..
           
-      - name: copy-module-next
+      - name: copy-module
         run: |
-          cp -r Module64/. "$PKG_FOLDER"/
+          cp -r Module64/. pkg64/"$PKG_FOLDER"/
+          cd pkg64/
           cd "$PKG_FOLDER"/
           sudo rm -rf README.md
           echo Final Package files
           ls *
           cd ..
-          cp -r Module32/. "$PKG_FOLDER"/
+          cp -r Module32/. pkg32/"$PKG_FOLDER"/
+          cd pkg32/
           cd "$PKG_FOLDER"/
           sudo rm -rf README.md
           echo Final Package files
           ls *
           cd ..
           echo Root
+          cd ..
           ls *
           
       - name: package-info
@@ -108,38 +113,58 @@ jobs:
         
       - name: create-archive
         run: |
+          cd pkg64/
           tar -cvf "$ARCHIVE_NAME".tar "$PKG_FOLDER"
           sha256sum "$ARCHIVE_NAME".tar > .sha256sum
           tar rf "$ARCHIVE_NAME".tar package.info .sha256sum
+          cd ..
+          cd pkg32/
+          tar -cvf "$ARCHIVE_NAME".tar "$PKG_FOLDER"
+          sha256sum "$ARCHIVE_NAME".tar > .sha256sum
+          tar rf "$ARCHIVE_NAME".tar package.info .sha256sum
+          cd ..
+          
       - name: compress-archive
         run: |
-         sudo rm "$ARCHIVE_NAME".tar.gz
-         gzip "$ARCHIVE_NAME".tar
+          cd pkg64/
+          sudo rm "$ARCHIVE_NAME".tar.gz
+          gzip "$ARCHIVE_NAME".tar
+          cd ..
+          cd pkg32/
+          sudo rm "$ARCHIVE_NAME".tar.gz
+          gzip "$ARCHIVE_NAME".tar
+          cd ..
           
       - name: create-checksum
         id: create-checksum
         run: |
-          sha256sum "$ARCHIVE_NAME".tar.gz >checksum.sha256
-          echo "checksum = $(cut -d ' ' -f 1 checksum.sha256)"  >> $GITHUB_OUTPUT
+          cd pkg64/
+          sha256sum "$ARCHIVE_NAME".tar.gz > "$ARCHIVE_NAME".sha256
+          echo "checksum = $(cut -d ' ' -f 1 "$ARCHIVE_NAME".sha256)"  >> $GITHUB_OUTPUT
+          cd ..
+          cd pkg32/
+          sha256sum "$ARCHIVE_NAME".tar.gz > "$ARCHIVE_NAME".sha256
+          echo "checksum = $(cut -d ' ' -f 1 "$ARCHIVE_NAME".sha256)"  >> $GITHUB_OUTPUT
+          cd ..
           
-      - name: upload-archive
-        id: upload-archive
+      - name: upload-archive-64
+        id: upload-archive-64
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ${{ env.ARCHIVE_NAME }}.tar.gz
-          asset_name: ${{ env.ARCHIVE_NAME }}.tar.gz
+          asset_path: pkg64/${{ env.ARCHIVE_NAME }}.tar.gz
+          asset_name:       ${{ env.ARCHIVE_NAME }}.tar.gz
           asset_content_type: application/gzip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
-      - name: upload-checksum
+      - name: upload-checksum-64
         id: upload-checksum
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: checksum.sha256
-          asset_name: checksum.sha256
+          asset_path: pkg64/"$ARCHIVE_NAME".sha256
+          asset_name:       "$ARCHIVE_NAME".sha256
           asset_content_type: text/plain
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
