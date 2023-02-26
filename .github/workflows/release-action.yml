@@ -28,7 +28,7 @@ jobs:
  
       - name: list-module
         run: |
-          ls Test/* -r
+          ls * -r
  
       - name: copy-module-next
         run: |
