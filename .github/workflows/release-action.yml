@@ -60,7 +60,7 @@ jobs:
           cd ..
       - name: create-archive
         run: |
-          tar -I 'gzip -9' -czf "$ARCHIVE_NAME".tar.gz "$ARCHIVE_NAME"
+          tar -czf "$ARCHIVE_NAME".tar.gz "$ARCHIVE_NAME"
       - name: create-checksum
         id: create-checksum
         run: |
