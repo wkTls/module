@@ -55,11 +55,11 @@ jobs:
       - name: copy-module-next
         run: |
           cp -r Module/. "$ARCHIVE_NAME"/
-          cd Module/
+          cd "$ARCHIVE_NAME"/
           sudo rm -rf README.md
           echo Final Package files
-          ls * -r
           cd ..
+          tree
       - name: create-archive
         run: |
           tar -czf "$ARCHIVE_NAME".tar.gz "$ARCHIVE_NAME"
