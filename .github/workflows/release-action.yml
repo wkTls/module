@@ -58,11 +58,20 @@ jobs:
           cd "$ARCHIVE_NAME"/
           sudo rm -rf README.md
           echo Final Package files
+          ls * -r
           cd ..
-          tree
+          echo Root
+          ls * -r
       - name: create-archive
         run: |
-          tar -czf "$ARCHIVE_NAME".tar.gz "$ARCHIVE_NAME"
+          tar -zf "$ARCHIVE_NAME".tar "$ARCHIVE_NAME"
+          echo "auto generate package" > package.info
+          tar rf "$ARCHIVE_NAME".tar package.info
+          
+      - name: compress-archive
+        run: |
+         gzip "$ARCHIVE_NAME".tar
+          
       - name: create-checksum
         id: create-checksum
         run: |
