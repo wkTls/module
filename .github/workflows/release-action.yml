@@ -14,11 +14,14 @@ jobs:
         run: mkdir "$ARCHIVE_NAME" && tar -xzf "$ARCHIVE_NAME".tar.gz -C "$ARCHIVE_NAME" --strip-components 1
       - name: clean-source
         run: rm -rf "$ARCHIVE_NAME"/{.github,assets}
-      - name: modify-archive
+      - name: download-data
         run: |
-          mkdir Test
+          mkdir Module
           mkdir Qemu
           cd Qemu
+          curl  https://qemu.weilnetz.de/w64/ > page.txt
+          grep qemu-w64-setup-*.exe  page.txt > grep.txt
+          cat grep.txt
           curl  https://qemu.weilnetz.de/w64/qemu-w64-setup-20221230.exe --output qemu-w64.exe
          
       - name: extract-qemu
@@ -29,13 +32,14 @@ jobs:
  
       - name: clean-module
         run: |
-          sudo chmod -R o+rwx Test/
-          sudo rm -rf  \$PLUGINSDIR/
-          cd Test/
+          sudo chmod -R o+rwx Module/
+          sudo rm -rf *PLUGINSDIR/
+          sudo rm -rf README.md
+          cd Module/
           ls * -r
       - name: copy-module-next
         run: |
-          cp -r Test/. "$ARCHIVE_NAME"/
+          cp -r Module/. "$ARCHIVE_NAME"/
       - name: create-archive
         run: |
           GZIP=-9 tar -czf "$ARCHIVE_NAME".tar.gz "$ARCHIVE_NAME"
