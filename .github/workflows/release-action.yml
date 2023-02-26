@@ -9,6 +9,7 @@ jobs:
       ARCHIVE_NAME:     ${{ github.event.repository.name }}-${{ github.event.release.tag_name }}
       PKG_FOLDER_x64:  .${{ github.event.repository.name }}-${{ github.event.release.tag_name }}.x64
       PKG_FOLDER_x86:  .${{ github.event.repository.name }}-${{ github.event.release.tag_name }}.x86
+      URL: https://github.com/wkTls/module/releases/tag/${{ github.event.release.tag_name }}
     steps:
     
       - name: download-source
@@ -113,11 +114,11 @@ jobs:
       - name: package-info
         run: |
           cd pkg_x64/
-          echo "auto generate package" > package.info
+          echo "$ARCHIVE_NAME.x64 auto generated package from $URL\nwake.tools" > package.info
           cat package.info
           cd ..
           cd pkg_x86/
-          echo "auto generate package" > package.info
+          echo "$ARCHIVE_NAME.x86 auto generated package from $URL\nwake.tools" > package.info
           cat package.info
           cd ..
         
@@ -201,7 +202,7 @@ jobs:
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.WEBHOOK_URL }}
-          content: "[pkg-release](https://github.com/wkTls/module/releases/tag/${{ github.event.release.tag_name }})"
+          content: "[pkg-release](${{ env.URL }})"
             
       - if: failure() 
         name: rollback-release(delete tag/id)
