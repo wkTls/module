@@ -28,9 +28,13 @@ jobs:
  
       - name: copy-module
         run: |
+          ls * -r
+ 
+      - name: copy-module-next
+        run: |
           cd ..
-          ls
-          cp -r Test/* "$ARCHIVE_NAME"
+          cd ..
+          cp -r Test/ "$ARCHIVE_NAME"
 
       - name: create-archive
         run: tar -czf "$ARCHIVE_NAME".tar.gz "$ARCHIVE_NAME"
