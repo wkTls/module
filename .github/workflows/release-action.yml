@@ -21,9 +21,13 @@ jobs:
           cd Qemu
           curl  https://qemu.weilnetz.de/w64/
           curl  https://qemu.weilnetz.de/w64/ --output page.txt
+          ls * -r
         
       - name: download-next
         run: |
+          cd ..
+          ls * -r
+          cd Qemu
           grep qemu-w64-setup-*.exe  page.txt > grep.txt
           cat grep.txt
           curl  https://qemu.weilnetz.de/w64/qemu-w64-setup-20221230.exe -O qemu-w64.exe
