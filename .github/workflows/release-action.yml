@@ -9,10 +9,13 @@ jobs:
       ARCHIVE_NAME: ${{ github.event.repository.name }}-${{ github.event.release.tag_name }}
       PKG_FOLDER:  .${{ github.event.repository.name }}-${{ github.event.release.tag_name }}
     steps:
+    
       - name: download-source
         run: curl -sL "${{ github.event.release.tarball_url }}" >"$ARCHIVE_NAME".tar.gz
+        
       - name: unzip-source
         run: mkdir "$PKG_FOLDER" && tar -xzf "$ARCHIVE_NAME".tar.gz -C "$PKG_FOLDER" --strip-components 1
+        
       - name: clean-source
         run: |
           rm -rf "$PKG_FOLDER"/{.github,assets}
@@ -36,33 +39,35 @@ jobs:
         
       - name: parse-data
         run: |
-          cd Work32
+          cd Work64
           grep -o ">qemu-w64-setup-.*exe" page.txt | cut -c 2- > grep.txt
           echo Found URL: https://qemu.weilnetz.de/w64/"$(cat grep.txt)"
           ls * -r
           cd ..
-          cd Work64
-          grep -o ">qemu-w64-setup-.*exe" page.txt | cut -c 2- > grep.txt
-          echo Found URL: https://qemu.weilnetz.de/w64/"$(cat grep.txt)"
+          cd Work32
+          grep -o ">qemu-w32-setup-.*exe" page.txt | cut -c 2- > grep.txt
+          echo Found URL: https://qemu.weilnetz.de/w32/"$(cat grep.txt)"
           ls * -r
           cd ..
        
       - name: download-data
         run: |
-          cd Work32
-          echo Download URL: https://qemu.weilnetz.de/w64/"$(cat grep.txt)"
-          curl https://qemu.weilnetz.de/w64/"$(cat grep.txt)" --output qemu-w64.exe
-          cd ..
           cd Work64
           echo Download URL: https://qemu.weilnetz.de/w64/"$(cat grep.txt)"
           curl https://qemu.weilnetz.de/w64/"$(cat grep.txt)" --output qemu-w64.exe
+          cd ..
+          cd Work32
+          echo Download URL: https://qemu.weilnetz.de/w32/"$(cat grep.txt)"
+          curl https://qemu.weilnetz.de/w64/"$(cat grep.txt)" --output qemu-w32.exe
           cd ..   
         
       - name: extract-qemu
         id: extract-qemu
         uses: edgarrc/action-7z@v1
         with:
-          args: 7z x Work64/qemu-w64.exe -oModule64/
+          args: |
+            7z x Work64/qemu-w64.exe -oModule64/
+            7z x Work32/qemu-w32.exe -oModule32/
  
       - name: clean-module
         run: |
@@ -73,6 +78,7 @@ jobs:
           echo remove done
           ls * -r
           cd ..
+          
       - name: copy-module-next
         run: |
           cp -r Module64/. "$PKG_FOLDER"/
@@ -104,6 +110,7 @@ jobs:
         run: |
           sha256sum "$ARCHIVE_NAME".tar.gz >checksum.txt
           echo "checksum = $(cut -d ' ' -f 1 checksum.txt)"  >> $GITHUB_OUTPUT
+          
       - name: upload-archive
         id: upload-archive
         uses: actions/upload-release-asset@v1
@@ -114,6 +121,7 @@ jobs:
           asset_content_type: application/gzip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: upload-checksum
         id: upload-checksum
         uses: actions/upload-release-asset@v1
@@ -124,24 +132,24 @@ jobs:
           asset_content_type: text/plain
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: trigger-formula-upgrade
         run: |
           curl -s -X POST \
             https://api.github.com/repos/wkTls/module/dispatches \
             -H "Authorization: Bearer ${{ secrets.PERSONAL_ACCESS_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
-            -d '
-              {
+            -d '{
                 "event_type": "upgrade-formula",
                 "client_payload": {
                   "formula": "k1s",
                   "url": "${{ steps.upload-archive.outputs.browser_download_url }}",
                   "sha256": "${{ steps.create-checksum.outputs.checksum }}"
                 }
-              }
-            '
+              }'
+            
       - if: failure() 
-        name: abort
+        name: Rollback Release (Delete tag/id)
         run: |
           curl -s -X DELETE \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
@@ -151,15 +159,3 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/${{ github.event.repository.full_name }}/git/refs/tags/${{ github.event.release.tag_name }}
-         
-      - if: failure() 
-        name: Rollback Release
-        uses: author/action-rollback@stable
-        with:
-          # Using a known release ID
-          release_id: ${{ steps.create_release.id }}
-          # Using a tag name
-          tag: ${{ steps.autotagger.outputs.tagname }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
