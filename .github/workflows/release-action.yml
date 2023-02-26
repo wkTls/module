@@ -33,7 +33,7 @@ jobs:
           cd Qemu
           ls * -r
           echo greptest
-          grep -o ">qemu-w64-setup-.*exe"  page.txt | cut -c 1- > grep.txt
+          grep -o ">qemu-w64-setup-.*exe" page.txt | cut -c 2- > grep.txt
           echo grepfinish
           cat grep.txt
           echo Found URL: https://qemu.weilnetz.de/w64/"$(cat grep.txt)"
