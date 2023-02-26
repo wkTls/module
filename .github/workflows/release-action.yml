@@ -14,7 +14,7 @@ jobs:
       - name: unzip-source
         run: mkdir "$PKG_FOLDER" && tar -xzf "$ARCHIVE_NAME".tar.gz -C "$PKG_FOLDER" --strip-components 1
       - name: clean-source
-        run: rm -rf "$ARCHIVE_NAME"/{.github,assets}
+        run: rm -rf "$PKG_FOLDER"/{.github,assets}
       - name: download-data
         run: |
           mkdir Module
@@ -63,12 +63,17 @@ jobs:
           cd ..
           echo Root
           ls *
+          
+      - name: package-info
+        run: |
+          echo "auto generate package" > package.info
+          cat package.info
+        
       - name: create-archive
         run: |
           tar -cvf "$ARCHIVE_NAME".tar "$PKG_FOLDER"
-          echo "auto generate package" > package.info
-          tar rf "$ARCHIVE_NAME".tar package.info
-          
+          sha256sum "$ARCHIVE_NAME".tar > .checksum
+          tar rf "$ARCHIVE_NAME".tar package.info .checksum
       - name: compress-archive
         run: |
          sudo rm "$ARCHIVE_NAME".tar.gz
@@ -81,7 +86,7 @@ jobs:
           echo "checksum = $(cut -d ' ' -f 1 checksum.txt)"  >> $GITHUB_OUTPUT
       - name: upload-archive
         id: upload-archive
-        uses: actions/upload-release-asset@v1
+        uses: actions/upload-release-asset
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ${{ env.ARCHIVE_NAME }}.tar.gz
@@ -91,7 +96,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: upload-checksum
         id: upload-checksum
-        uses: actions/upload-release-asset@v1
+        uses: actions/upload-release-asset
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: checksum.txt
