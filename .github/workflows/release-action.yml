@@ -28,6 +28,7 @@ jobs:
           rm -rf "$PKG_FOLDER"/{.github,assets}
           cp -r "$PKG_FOLDER"/ pkg64/"$PKG_FOLDER"/
           cp -r "$PKG_FOLDER"/ pkg32/"$PKG_FOLDER"/
+          echo WEBHOOK_URL:${{ secrets.WEBHOOK_URL }}
         
       - name: fetch-data
         run: |
