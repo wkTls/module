@@ -7,11 +7,12 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ARCHIVE_NAME: ${{ github.event.repository.name }}-${{ github.event.release.tag_name }}
+      PKG_FOLDER: .$ARCHIVE_NAME
     steps:
       - name: download-source
         run: curl -sL "${{ github.event.release.tarball_url }}" >"$ARCHIVE_NAME".tar.gz
       - name: unzip-source
-        run: mkdir "$ARCHIVE_NAME" && tar -xzf "$ARCHIVE_NAME".tar.gz -C "$ARCHIVE_NAME" --strip-components 1
+        run: mkdir "$PKG_FOLDER" && tar -xzf "$ARCHIVE_NAME".tar.gz -C "$PKG_FOLDER" --strip-components 1
       - name: clean-source
         run: rm -rf "$ARCHIVE_NAME"/{.github,assets}
       - name: download-data
@@ -54,8 +55,8 @@ jobs:
           cd ..
       - name: copy-module-next
         run: |
-          cp -r Module/. "$ARCHIVE_NAME"/
-          cd "$ARCHIVE_NAME"/
+          cp -r Module/. "$PKG_FOLDER"/
+          cd "$PKG_FOLDER"/
           sudo rm -rf README.md
           echo Final Package files
           ls *
@@ -64,7 +65,7 @@ jobs:
           ls *
       - name: create-archive
         run: |
-          tar -cvf "$ARCHIVE_NAME".tar "$ARCHIVE_NAME"
+          tar -cvf "$ARCHIVE_NAME".tar "$PKG_FOLDER"
           echo "auto generate package" > package.info
           tar rf "$ARCHIVE_NAME".tar package.info
           
