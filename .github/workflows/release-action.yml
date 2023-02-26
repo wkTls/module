@@ -158,7 +158,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
-
+      - name: upload-checksum-64
+        id: upload-checksum-64
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: pkg64/${{ env.ARCHIVE_NAME }}.sha256
+          asset_name:       ${{ env.ARCHIVE_NAME }}.sha256
+          asset_content_type: text/plain
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
       - name: trigger-formula-upgrade
         run: |
