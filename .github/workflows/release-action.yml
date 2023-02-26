@@ -26,7 +26,6 @@ jobs:
           
       - name: fetch-data
         run: |
-          mkdir Work64
           cd Work64
           curl  https://qemu.weilnetz.de/w64/ --output page.txt
           cat page.txt
