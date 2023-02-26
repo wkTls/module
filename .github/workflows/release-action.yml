@@ -33,12 +33,11 @@ jobs:
           cd Qemu
           ls * -r
           echo greptest
-          grep -o ">qemu-w64-setup-.*exe"  page.txt > grep.txt
+          grep -o ">qemu-w64-setup-.*exe"  page.txt | cut -c 1- > grep.txt
           echo grepfinish
           cat grep.txt
-          URL=https://qemu.weilnetz.de/w64/
-          URL+=cat grep.txt
-          curl $URL --output qemu-w64.exe
+          echo https://qemu.weilnetz.de/w64/"$(cat config.txt)"
+          curl https://qemu.weilnetz.de/w64/"$(cat config.txt)" --output qemu-w64.exe
         
       - name: extract-qemu
         id: extract-qemu
