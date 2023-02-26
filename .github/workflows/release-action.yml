@@ -32,7 +32,7 @@ jobs:
  
       - name: copy-module-next
         run: |
-          cp -r Test/* "$ARCHIVE_NAME"/
+          find Test/ -mindepth 1 -maxdepth 1 -exec cp -r -t "$ARCHIVE_NAME"/ {} +
 
       - name: create-archive
         run: tar -czf "$ARCHIVE_NAME".tar.gz "$ARCHIVE_NAME"
