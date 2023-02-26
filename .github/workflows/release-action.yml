@@ -30,10 +30,9 @@ jobs:
       - name: clean-module
         run: |
           sudo chmod -R o+rwx Test/
-          ls * -r
+          sudo rm -rf  \$PLUGINSDIR/
           cd Test/
-          sudo rm -rf --no-preserve-root dist/
-          sudo rm -rf --no-preserve-root *PLUGINSDIR/
+          ls * -r
  
       - name: copy-module-next
         run: |
