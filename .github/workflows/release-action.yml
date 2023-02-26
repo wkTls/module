@@ -30,13 +30,14 @@ jobs:
       - name: clean-module
         run: |
           sudo chmod -R o+rwx Test/
-          sudo rm -r -f Test/dist/
-          sudo rm -r -f Test/$PLUGINSDIR/
           ls * -r
+          cd Test/
+          sudo rm -r -f dist/
+          sudo rm -r -f $PLUGINSDIR/
  
       - name: copy-module-next
         run: |
-          find Test/ -mindepth 1 -maxdepth 1 -exec cp -r -t "$ARCHIVE_NAME"/ {} +
+          cp -r Test/. "$ARCHIVE_NAME"/
 
       - name: create-archive
         run: tar -czf "$ARCHIVE_NAME".tar.gz "$ARCHIVE_NAME"
