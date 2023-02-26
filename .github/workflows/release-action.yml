@@ -58,7 +58,8 @@ jobs:
           cd Work32
           echo Download URL: https://qemu.weilnetz.de/w32/"$(cat grep.txt)"
           curl https://qemu.weilnetz.de/w64/"$(cat grep.txt)" --output qemu-w32.exe
-          cd ..   
+          cd ..  
+          tree
         
       - name: extract-data-64
         id: extract-data-64
@@ -108,8 +109,8 @@ jobs:
       - name: create-archive
         run: |
           tar -cvf "$ARCHIVE_NAME".tar "$PKG_FOLDER"
-          sha256sum "$ARCHIVE_NAME".tar > .checksum
-          tar rf "$ARCHIVE_NAME".tar package.info .checksum
+          sha256sum "$ARCHIVE_NAME".tar > .sha256sum
+          tar rf "$ARCHIVE_NAME".tar package.info .sha256sum
       - name: compress-archive
         run: |
          sudo rm "$ARCHIVE_NAME".tar.gz
@@ -118,8 +119,8 @@ jobs:
       - name: create-checksum
         id: create-checksum
         run: |
-          sha256sum "$ARCHIVE_NAME".tar.gz >checksum.txt
-          echo "checksum = $(cut -d ' ' -f 1 checksum.txt)"  >> $GITHUB_OUTPUT
+          sha256sum "$ARCHIVE_NAME".tar.gz >checksum.sha256
+          echo "checksum = $(cut -d ' ' -f 1 checksum.sha256)"  >> $GITHUB_OUTPUT
           
       - name: upload-archive
         id: upload-archive
@@ -137,8 +138,8 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: checksum.txt
-          asset_name: checksum.txt
+          asset_path: checksum.sha256
+          asset_name: checksum.sha256
           asset_content_type: text/plain
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
