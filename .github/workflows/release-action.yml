@@ -24,10 +24,12 @@ jobs:
           ls * -r
           cat page.txt
           tree
+          cd ..
+          tree
+          ls * -r
         
       - name: download-next
         run: |
-          cd ..
           ls * -r
           cd Qemu
           grep qemu-w64-setup-*.exe  page.txt > grep.txt
