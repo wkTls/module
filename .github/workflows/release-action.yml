@@ -19,11 +19,15 @@ jobs:
           mkdir Module
           mkdir Qemu
           cd Qemu
+          curl  https://qemu.weilnetz.de/w64/
           curl  https://qemu.weilnetz.de/w64/ > page.txt
+        
+      - name: download-next
+        run: |
           grep qemu-w64-setup-*.exe  page.txt > grep.txt
           cat grep.txt
           curl  https://qemu.weilnetz.de/w64/qemu-w64-setup-20221230.exe --output qemu-w64.exe
-         
+        
       - name: extract-qemu
         id: extract-qemu
         uses: edgarrc/action-7z@v1
