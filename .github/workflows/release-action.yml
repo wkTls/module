@@ -18,14 +18,16 @@ jobs:
         
       - name: pre-source
         run: |
+          mkdir pkg64
+          mkdir pkg32
+          mkdir Work64
+          mkdir Work32
+          mkdir Module64
+          mkdir Module32
           rm -rf "$PKG_FOLDER"/{.github,assets}
           cp -r "$PKG_FOLDER"/ pkg64/"$PKG_FOLDER"/
           cp -r "$PKG_FOLDER"/ pkg32/"$PKG_FOLDER"/
-          mkdir Module64
-          mkdir Module32
-          mkdir Work64
-          mkdir Work32
-          
+        
       - name: fetch-data
         run: |
           cd Work64
