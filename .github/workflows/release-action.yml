@@ -57,7 +57,7 @@ jobs:
           cd ..
           cd Work32
           echo Download URL: https://qemu.weilnetz.de/w32/"$(cat grep.txt)"
-          curl https://qemu.weilnetz.de/w64/"$(cat grep.txt)" --output qemu-w32.exe
+          curl https://qemu.weilnetz.de/w32/"$(cat grep.txt)" --output qemu-w32.exe
           cd ..  
           tree
         
