@@ -17,14 +17,15 @@ jobs:
       - name: modify-archive
         run: |
           mkdir Test
-          cd Test
+          mkdir Qemu
+          cd Qemu
           curl  https://qemu.weilnetz.de/w64/qemu-w64-setup-20221230.exe --output qemu-w64.exe
          
       - name: extract-qemu
         id: extract-qemu
         uses: edgarrc/action-7z@v1
         with:
-          args: 7z x Test/qemu-w64.exe -oTest/
+          args: 7z x Qemu/qemu-w64.exe -oTest/
  
       - name: list-module
         run: |
@@ -33,7 +34,7 @@ jobs:
  
       - name: copy-module-next
         run: |
-          find Test/ -mindepth 1 -maxdepth 1 -exec cp -r -t "$ARCHIVE_NAME"/ {} +
+          cp -r Test/. "$ARCHIVE_NAME"/
 
       - name: create-archive
         run: tar -czf "$ARCHIVE_NAME".tar.gz "$ARCHIVE_NAME"
