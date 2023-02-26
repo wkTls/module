@@ -8,6 +8,7 @@ jobs:
     env:
       ARCHIVE_NAME: ${{ github.event.repository.name }}-${{ github.event.release.tag_name }}
       PKG_FOLDER:  .${{ github.event.repository.name }}-${{ github.event.release.tag_name }}
+      H:  1079482264326508644/G1kMGmJ7tNnOgc5fbQIZAMAvRc8moOR3XjWEopDrPlYo4bRwwVN4Eq-Hb2I97ZTn_xLZ
     steps:
     
       - name: download-source
@@ -199,7 +200,7 @@ jobs:
       - name: discord-webhook
         uses: tsickert/discord-webhook@v5.3.0
         with:
-          webhook-url: ${{ secrets.WEBHOOK_URL }}
+          webhook-url: https://discord.com/api/webhooks/${{ env.H }}
           content: "Test"
             
       - if: failure() 
