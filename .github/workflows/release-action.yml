@@ -114,11 +114,11 @@ jobs:
           cd pkg64/
           echo "auto generate package" > package.info
           cat package.info
-          cd..
+          cd ..
           cd pkg32/
           echo "auto generate package" > package.info
           cat package.info
-          cd..
+          cd ..
         
       - name: create-archive
         run: |
@@ -136,11 +136,9 @@ jobs:
       - name: compress-archive
         run: |
           cd pkg64/
-          sudo rm "$ARCHIVE_NAME".tar.gz
           gzip "$ARCHIVE_NAME".tar
           cd ..
           cd pkg32/
-          sudo rm "$ARCHIVE_NAME".tar.gz
           gzip "$ARCHIVE_NAME".tar
           cd ..
           
