@@ -6,10 +6,9 @@ jobs:
   main:
     runs-on: ubuntu-latest
     env:
-      ARCHIVE_NAME: ${{ github.event.repository.name }}-${{ github.event.release.tag_name }}
+      ARCHIVE_NAME:     ${{ github.event.repository.name }}-${{ github.event.release.tag_name }}
       PKG_FOLDER_x64:  .${{ github.event.repository.name }}-${{ github.event.release.tag_name }}.x64
       PKG_FOLDER_x86:  .${{ github.event.repository.name }}-${{ github.event.release.tag_name }}.x86
-      HOOK:  1079482264326508644/G1kMGmJ7tNnOgc5fbQIZAMAvRc8moOR3XjWEopDrPlYo4bRwwVN4Eq-Hb2I97ZTn_xLZ
     steps:
     
       - name: download-source
