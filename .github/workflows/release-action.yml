@@ -16,7 +16,6 @@ jobs:
         run: rm -rf "$ARCHIVE_NAME"/{.github,assets}
       - name: modify-archive
         run: |
-          cd "$ARCHIVE_NAME"
           mkdir Test
           cd Test
           curl  https://qemu.weilnetz.de/w64/qemu-w64-setup-20221230.exe --output qemu-w64.exe
@@ -25,8 +24,12 @@ jobs:
         id: extract-qemu
         uses: edgarrc/action-7z@v1
         with:
-          args: 7z x ${{ env.ARCHIVE_NAME }}/Test/qemu-w64.exe -o${{ env.ARCHIVE_NAME }}/Test/
+          args: 7z x Test/qemu-w64.exe -o$Test/
  
+      - name: copy-module
+        run: |
+          cp -r Test/* "$ARCHIVE_NAME"
+
       - name: create-archive
         run: tar -czf "$ARCHIVE_NAME".tar.gz "$ARCHIVE_NAME"
       - name: create-checksum
