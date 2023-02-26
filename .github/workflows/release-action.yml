@@ -20,23 +20,23 @@ jobs:
         
       - name: pre-source
         run: |
-          mkdir pkg64
-          mkdir pkg32
-          mkdir Work64
-          mkdir Work32
-          mkdir Module64
-          mkdir Module32
+          mkdir pkg_x64
+          mkdir pkg_x86
+          mkdir work_x64
+          mkdir work_x86
+          mkdir module_x64
+          mkdir module_x86
           rm -rf "$ARCHIVE_NAME"/{.github,assets}
-          cp -r "$ARCHIVE_NAME"/ pkg64/"$PKG_FOLDER_x64"/
-          cp -r "$ARCHIVE_NAME"/ pkg32/"$PKG_FOLDER_x86"/
+          cp -r "$ARCHIVE_NAME"/ pkg_x64/"$PKG_FOLDER_x64"/
+          cp -r "$ARCHIVE_NAME"/ pkg_x86/"$PKG_FOLDER_x86"/
         
       - name: fetch-data
         run: |
-          cd Work64
+          cd work_x64
           curl  https://qemu.weilnetz.de/w64/ --output page.txt
           cat page.txt
           cd ..
-          cd Work32
+          cd work_x86
           curl  https://qemu.weilnetz.de/w32/ --output page.txt
           cat page.txt
           cd ..
@@ -44,12 +44,12 @@ jobs:
         
       - name: parse-data
         run: |
-          cd Work64
+          cd work_x64
           grep -o ">qemu-w64-setup-.*exe" page.txt | cut -c 2- > grep.txt
           echo Found URL: https://qemu.weilnetz.de/w64/"$(cat grep.txt)"
           ls * -r
           cd ..
-          cd Work32
+          cd work_x86
           grep -o ">qemu-w32-setup-.*exe" page.txt | cut -c 2- > grep.txt
           echo Found URL: https://qemu.weilnetz.de/w32/"$(cat grep.txt)"
           ls * -r
@@ -57,11 +57,11 @@ jobs:
        
       - name: download-data
         run: |
-          cd Work64
+          cd work_x64
           echo Download URL: https://qemu.weilnetz.de/w64/"$(cat grep.txt)"
           curl https://qemu.weilnetz.de/w64/"$(cat grep.txt)" --output qemu-w64.exe
           cd ..
-          cd Work32
+          cd work_x86
           echo Download URL: https://qemu.weilnetz.de/w32/"$(cat grep.txt)"
           curl https://qemu.weilnetz.de/w32/"$(cat grep.txt)" --output qemu-w32.exe
           cd ..  
@@ -71,37 +71,37 @@ jobs:
         id: extract-data-64
         uses: edgarrc/action-7z@v1
         with:
-          args: 7z x Work64/qemu-w64.exe -oModule64/
+          args: 7z x work_x64/qemu-w64.exe -omodule_x64/
           
       - name: extract-data-32
         id: extract-data-32
         uses: edgarrc/action-7z@v1
         with:
-          args: 7z x Work32/qemu-w32.exe -oModule32/
+          args: 7z x work_x86/qemu-w32.exe -omodule_x86/
  
       - name: clean-module
         run: |
-          sudo chmod -R o+rwx Module64/
-          cd Module64/
+          sudo chmod -R o+rwx module_x64/
+          cd module_x64/
           sudo rm -rf *PLUGINSDIR/
           cd ..
-          sudo chmod -R o+rwx Module32/
-          cd Module32/
+          sudo chmod -R o+rwx module_x86/
+          cd module_x86/
           sudo rm -rf *PLUGINSDIR/
           cd ..
           
       - name: copy-module
         run: |
-          cp -r Module64/. pkg64/"$PKG_FOLDER_x64"/
-          cd pkg64/
+          cp -r module_x64/. pkg_x64/"$PKG_FOLDER_x64"/
+          cd pkg_x64/
           cd "$PKG_FOLDER_x64"/
           sudo rm -rf README.md
           echo Final Package files
           ls *
           cd ..
           cd ..
-          cp -r Module32/. pkg32/"$PKG_FOLDER_x86"/
-          cd pkg32/
+          cp -r module_x86/. pkg_x86/"$PKG_FOLDER_x86"/
+          cd pkg_x86/
           cd "$PKG_FOLDER_x86"/
           sudo rm -rf README.md
           echo Final Package files
@@ -113,23 +113,23 @@ jobs:
           
       - name: package-info
         run: |
-          cd pkg64/
+          cd pkg_x64/
           echo "auto generate package" > package.info
           cat package.info
           cd ..
-          cd pkg32/
+          cd pkg_x86/
           echo "auto generate package" > package.info
           cat package.info
           cd ..
         
       - name: create-archive
         run: |
-          cd pkg64/
+          cd pkg_x64/
           tar -cvf "$ARCHIVE_NAME".tar "$PKG_FOLDER_x64"
           sha256sum "$ARCHIVE_NAME".tar > .sha256sum
           tar rf "$ARCHIVE_NAME".tar package.info .sha256sum
           cd ..
-          cd pkg32/
+          cd pkg_x86/
           tar -cvf "$ARCHIVE_NAME".tar "$PKG_FOLDER_x86"
           sha256sum "$ARCHIVE_NAME".tar > .sha256sum
           tar rf "$ARCHIVE_NAME".tar package.info .sha256sum
@@ -137,21 +137,21 @@ jobs:
           
       - name: compress-archive
         run: |
-          cd pkg64/
+          cd pkg_x64/
           gzip "$ARCHIVE_NAME".tar
           cd ..
-          cd pkg32/
+          cd pkg_x86/
           gzip "$ARCHIVE_NAME".tar
           cd ..
           
       - name: create-checksum
         id: create-checksum
         run: |
-          cd pkg64/
+          cd pkg_x64/
           sha256sum "$ARCHIVE_NAME".tar.gz > "$ARCHIVE_NAME".sha256
           echo "checksum = $(cut -d ' ' -f 1 "$ARCHIVE_NAME".sha256)"  >> $GITHUB_OUTPUT
           cd ..
-          cd pkg32/
+          cd pkg_x86/
           sha256sum "$ARCHIVE_NAME".tar.gz > "$ARCHIVE_NAME".sha256
           echo "checksum = $(cut -d ' ' -f 1 "$ARCHIVE_NAME".sha256)"  >> $GITHUB_OUTPUT
           cd ..
@@ -161,7 +161,7 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: pkg64/${{ env.ARCHIVE_NAME }}.tar.gz
+          asset_path: pkg_x64/${{ env.ARCHIVE_NAME }}.tar.gz
           asset_name: ${{ env.ARCHIVE_NAME }}.x64.tar.gz
           asset_content_type: application/gzip
         env:
@@ -171,7 +171,7 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: pkg32/${{ env.ARCHIVE_NAME }}.tar.gz
+          asset_path: pkg_x86/${{ env.ARCHIVE_NAME }}.tar.gz
           asset_name: ${{ env.ARCHIVE_NAME }}.x86.tar.gz
           asset_content_type: application/gzip
         env:
@@ -182,7 +182,7 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: pkg64/${{ env.ARCHIVE_NAME }}.sha256
+          asset_path: pkg_x64/${{ env.ARCHIVE_NAME }}.sha256
           asset_name: ${{ env.ARCHIVE_NAME }}.x64.sha256
           asset_content_type: text/plain
         env:
@@ -192,7 +192,7 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: pkg32/${{ env.ARCHIVE_NAME }}.sha256
+          asset_path: pkg_x86/${{ env.ARCHIVE_NAME }}.sha256
           asset_name: ${{ env.ARCHIVE_NAME }}.x86.sha256
           asset_content_type: text/plain
         env:
