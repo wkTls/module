@@ -27,10 +27,12 @@ jobs:
         with:
           args: 7z x Qemu/qemu-w64.exe -oTest/
  
-      - name: list-module
+      - name: clean-module
         run: |
           sudo chmod -R o+rwx Test/
           ls * -r
+          sudo rm -r -f Test/dist/
+          sudo rm -r -f Test/$PLUGINSDIR/
  
       - name: copy-module-next
         run: |
