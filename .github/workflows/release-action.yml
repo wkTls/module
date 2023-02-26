@@ -7,7 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ARCHIVE_NAME: ${{ github.event.repository.name }}-${{ github.event.release.tag_name }}
-      PKG_FOLDER:  .${{ github.event.repository.name }}-${{ github.event.release.tag_name }}
+      PKG_FOLDER_x64:  .${{ github.event.repository.name }}-${{ github.event.release.tag_name }}.x64
+      PKG_FOLDER_x86:  .${{ github.event.repository.name }}-${{ github.event.release.tag_name }}.x86
       HOOK:  1079482264326508644/G1kMGmJ7tNnOgc5fbQIZAMAvRc8moOR3XjWEopDrPlYo4bRwwVN4Eq-Hb2I97ZTn_xLZ
     steps:
     
@@ -15,7 +16,7 @@ jobs:
         run: curl -sL "${{ github.event.release.tarball_url }}" >"$ARCHIVE_NAME".tar.gz
         
       - name: unzip-source
-        run: mkdir "$PKG_FOLDER" && tar -xzf "$ARCHIVE_NAME".tar.gz -C "$PKG_FOLDER" --strip-components 1
+        run: mkdir "$ARCHIVE_NAME" && tar -xzf "$ARCHIVE_NAME".tar.gz -C "$ARCHIVE_NAME" --strip-components 1
         
       - name: pre-source
         run: |
@@ -25,9 +26,9 @@ jobs:
           mkdir Work32
           mkdir Module64
           mkdir Module32
-          rm -rf "$PKG_FOLDER"/{.github,assets}
-          cp -r "$PKG_FOLDER"/ pkg64/"$PKG_FOLDER"/
-          cp -r "$PKG_FOLDER"/ pkg32/"$PKG_FOLDER"/
+          rm -rf "$ARCHIVE_NAME"/{.github,assets}
+          cp -r "$ARCHIVE_NAME"/ pkg64/"$PKG_FOLDER_x64"/
+          cp -r "$ARCHIVE_NAME"/ pkg32/"$PKG_FOLDER_x86"/
         
       - name: fetch-data
         run: |
@@ -91,17 +92,17 @@ jobs:
           
       - name: copy-module
         run: |
-          cp -r Module64/. pkg64/"$PKG_FOLDER"/
+          cp -r Module64/. pkg64/"$PKG_FOLDER_x64"/
           cd pkg64/
-          cd "$PKG_FOLDER"/
+          cd "$PKG_FOLDER_x64"/
           sudo rm -rf README.md
           echo Final Package files
           ls *
           cd ..
           cd ..
-          cp -r Module32/. pkg32/"$PKG_FOLDER"/
+          cp -r Module32/. pkg32/"$PKG_FOLDER_x86"/
           cd pkg32/
-          cd "$PKG_FOLDER"/
+          cd "$PKG_FOLDER_x86"/
           sudo rm -rf README.md
           echo Final Package files
           ls *
@@ -124,12 +125,12 @@ jobs:
       - name: create-archive
         run: |
           cd pkg64/
-          tar -cvf "$ARCHIVE_NAME".tar "$PKG_FOLDER"
+          tar -cvf "$ARCHIVE_NAME".tar "$PKG_FOLDER_x64"
           sha256sum "$ARCHIVE_NAME".tar > .sha256sum
           tar rf "$ARCHIVE_NAME".tar package.info .sha256sum
           cd ..
           cd pkg32/
-          tar -cvf "$ARCHIVE_NAME".tar "$PKG_FOLDER"
+          tar -cvf "$ARCHIVE_NAME".tar "$PKG_FOLDER_x86"
           sha256sum "$ARCHIVE_NAME".tar > .sha256sum
           tar rf "$ARCHIVE_NAME".tar package.info .sha256sum
           cd ..
