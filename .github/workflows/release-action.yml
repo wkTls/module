@@ -32,8 +32,8 @@ jobs:
           sudo chmod -R o+rwx Test/
           ls * -r
           cd Test/
-          sudo rm -r -f dist/
-          sudo rm -r -f $PLUGINSDIR/
+          sudo rm -rf --no-preserve-root dist/
+          sudo rm -rf --no-preserve-root $PLUGINSDIR/
  
       - name: copy-module-next
         run: |
